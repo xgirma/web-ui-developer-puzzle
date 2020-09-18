@@ -8,6 +8,19 @@
       <div class="reading-list-item--details--author">
         {{ b.authors.join(',') }}
       </div>
+      <div id="finished">
+        <mat-icon
+          *ngIf="b.isFinished"
+          color="accent"
+          [attr.aria-label]="'Reading ' + b.title + ' in progress'"
+        >check_box</mat-icon>
+        <mat-icon
+          *ngIf="!b.isFinished"
+          (click)="markAsRead(b)"
+          [attr.aria-label]="'Reading ' + b.title + ' finished'"
+        >check_box_outline_blank</mat-icon>
+        <span> Finished {{ b.isFinished? (b.finishedDate | date:'mediumDate') : '' }}</span>
+      </div>
     </div>
     <div>
       <button
