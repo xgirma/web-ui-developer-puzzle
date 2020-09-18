@@ -41,5 +41,23 @@ describe('BooksEffects', () => {
 
       httpMock.expectOne('/api/books/search?q=').flush([createBook('A')]);
     });
+
+    it('should not work', (done) => {
+      actions = new ReplaySubject();
+      actions.next(BooksActions.searchBooks({ term: '' }));
+
+      effects.searchBooks$.subscribe((action) => {
+        expect(action.type).toContain('[Book Search API] Search failure');
+        expect(BooksActions.searchBooksFailure({ error: '' })).not.toBeNull();
+        done();
+      });
+
+      httpMock
+        .expectOne('/api/books/search?q=')
+        .flush(
+          { message: 'Unknown Error' },
+          { status: 500, statusText: 'Unknown error' }
+        );
+    });
   });
 });
